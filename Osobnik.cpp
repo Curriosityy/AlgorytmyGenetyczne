@@ -19,7 +19,7 @@ Osobnik::~Osobnik()
 	delete chromosome;
 }
 
-bool * Osobnik::getChromosome()
+bool* Osobnik::getChromosome()
 {
 	return chromosome;
 }
@@ -41,12 +41,12 @@ double* Osobnik::getChromValues(int* arrayOfBinAcc, int accSize)
 	return chromValues;
 }
 
-double Osobnik::adaptation(double * values, int size)
+double Osobnik::adaptation(double* values, int size)
 {
 	double adapt = C * size;
 	for (int i = 0; i < size; i++)
 	{
-		adapt += pow(values[i], 2) - C * cos(20 * _Pi*values[i]);
+		adapt += pow(values[i], 2) - (C * cos(20 * _Pi*values[i]));
 	}
 	return adapt;
 }

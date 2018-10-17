@@ -36,7 +36,7 @@ Populacja::~Populacja()
 	delete arrayOfBinAccuLen;
 }
 
-Osobnik * Populacja::getIndividual(int i)
+Osobnik* Populacja::getIndividual(int i)
 {
 	return population[i];
 }
