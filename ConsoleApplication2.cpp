@@ -15,21 +15,22 @@ int _tmain(int argc, _TCHAR* argv[])
 	acc[4] = 5;
 	acc[5] = 6;
 
-	cout.fill(' ');
-	Populacja pop(acc, populationSize, accSize);
-	for (int a = 0; a < populationSize; a++)
-	{
-		Osobnik* ind = pop.getIndividual(a);
-		double* chromosomValues = ind->getChromValues(pop.getArrayOfBinAccuLen(), accSize);
-		for (int i = 0; i < accSize; i++)
-		{
-			double r = pow(10, pop.getAccuracy()[i]);
-			chromosomValues[i] = round(chromosomValues[i] * r) / r;
-			cout << " x" << i << "=" << setw(acc[i] + 3) << left << chromosomValues[i];
-		}
-
-		cout << " adaptacja=" << ind->adaptation(chromosomValues, accSize) << endl;
+	float** range = new float*[accSize];
+	for (int i = 0; i < accSize; i++) {
+		range[i] = new float[2];
+		range[i][0] = -1.0f;
+		range[i][1] = 1.0f;
 	}
+
+	cout.fill(' ');
+	Populacja pop(acc, populationSize, accSize, range);
+	pop.printInfo();
 	getchar();
+
+	delete acc;
+	for (int i = 0; i < accSize; i++) {
+		delete range[i];
+	}
+	delete range;
 	return 0;
 }

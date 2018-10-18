@@ -4,8 +4,6 @@
 //
 
 #pragma once
-#define B 1
-#define A -1
 #define C 10
 #include "targetver.h"
 #include <sstream>
@@ -19,6 +17,7 @@
 #include <iostream>
 #include <vector>
 #include <iomanip>
+#include <map>
 using namespace std;
 
 // TODO: W tym miejscu odwo³aj siê do dodatkowych nag³ówków wymaganych przez program
