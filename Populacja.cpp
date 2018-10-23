@@ -220,7 +220,32 @@ vector<Osobnik> Populacja::rankMax()
 vector<Osobnik> Populacja::tournamentMin(int numberOfGroups)
 {
 	vector<pair<Osobnik*, double>> individualValue = createPairIndividualValue();
+	map<Osobnik*, double> battleGroup;
+	map<Osobnik*, double>::iterator ite;
+	pair<Osobnik*, double> pair;
 	vector<Osobnik> newPopulation;
+	for (int i = 0; i < populationSize; i++)
+	{
+		while (battleGroup.size() <= numberOfGroups)
+		{
+			pair = individualValue[rand() % populationSize];
+			ite = battleGroup.find(pair.first);
+			if (ite == battleGroup.end())
+			{
+				battleGroup[pair.first] = pair.second;
+			}
+		}
+		pair = *battleGroup.begin();
+		for (ite = battleGroup.begin(); ite != battleGroup.end(); ite++)
+		{
+			if (pair.second >= ite->second)
+			{
+				pair = *ite;
+			}
+		}
+		newPopulation.push_back(Osobnik(pair.first));
+		battleGroup.clear();
+	}
 	return newPopulation;
 }
 
@@ -228,6 +253,31 @@ vector<Osobnik> Populacja::tournamentMax(int numberOfGroups)
 {
 	vector<pair<Osobnik*, double>> individualValue = createPairIndividualValue();
 	vector<Osobnik> newPopulation;
+	map<Osobnik*, double> battleGroup;
+	map<Osobnik*, double>::iterator ite;
+	pair<Osobnik*, double> pair;
+	for (int i = 0; i < populationSize; i++)
+	{
+		while (battleGroup.size() <= numberOfGroups)
+		{
+			pair = individualValue[rand() % populationSize];
+			ite = battleGroup.find(pair.first);
+			if (ite == battleGroup.end())
+			{
+				battleGroup[pair.first] = pair.second;
+			}
+		}
+		pair = *battleGroup.begin();
+		for (ite = battleGroup.begin(); ite != battleGroup.end(); ite++)
+		{
+			if (pair.second <= ite->second)
+			{
+				pair = *ite;
+			}
+		}
+		newPopulation.push_back(Osobnik(pair.first));
+		battleGroup.clear();
+	}
 	return newPopulation;
 }
 
@@ -235,6 +285,27 @@ vector<Osobnik> Populacja::tournamentReturnMin(int numberOfGroups)
 {
 	vector<pair<Osobnik*, double>> individualValue = createPairIndividualValue();
 	vector<Osobnik> newPopulation;
+	vector<pair<Osobnik*, double>> battleGroup;
+	vector<pair<Osobnik*, double>>::iterator ite;
+	pair<Osobnik*, double> pair;
+	for (int i = 0; i < populationSize; i++)
+	{
+		while (battleGroup.size() <= numberOfGroups)
+		{
+			pair = individualValue[rand() % populationSize];
+			battleGroup.push_back(pair);
+		}
+		pair = *battleGroup.begin();
+		for (ite = battleGroup.begin(); ite != battleGroup.end(); ite++)
+		{
+			if (pair.second >= ite->second)
+			{
+				pair = *ite;
+			}
+		}
+		newPopulation.push_back(Osobnik(pair.first));
+		battleGroup.clear();
+	}
 	return newPopulation;
 }
 
@@ -242,6 +313,27 @@ vector<Osobnik> Populacja::tournamentReturnMax(int numberOfGroups)
 {
 	vector<pair<Osobnik*, double>> individualValue = createPairIndividualValue();
 	vector<Osobnik> newPopulation;
+	vector<pair<Osobnik*, double>> battleGroup;
+	vector<pair<Osobnik*, double>>::iterator ite;
+	pair<Osobnik*, double> pair;
+	for (int i = 0; i < populationSize; i++)
+	{
+		while (battleGroup.size() <= numberOfGroups)
+		{
+			pair = individualValue[rand() % populationSize];
+			battleGroup.push_back(pair);
+		}
+		pair = *battleGroup.begin();
+		for (ite = battleGroup.begin(); ite != battleGroup.end(); ite++)
+		{
+			if (pair.second <= ite->second)
+			{
+				pair = *ite;
+			}
+		}
+		newPopulation.push_back(Osobnik(pair.first));
+		battleGroup.clear();
+	}
 	return newPopulation;
 }
 

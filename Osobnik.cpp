@@ -10,7 +10,7 @@ Osobnik::Osobnik(int binChromLen, float** range)
 }
 Osobnik::Osobnik(const Osobnik* osobnik)
 {
-	binChromLen = osobnik->binChromLen;
+	this->binChromLen = osobnik->binChromLen;
 	chromosome = new bool[binChromLen];
 	this->range = osobnik->range;
 	for (int i = 0; i < binChromLen; i++)
