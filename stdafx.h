@@ -17,7 +17,7 @@
 #include <iostream>
 #include <vector>
 #include <iomanip>
-#include <map>
+#include <unordered_map>
 using namespace std;
 
 // TODO: W tym miejscu odwo³aj siê do dodatkowych nag³ówków wymaganych przez program

@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "Populacja.h"
 
+double Populacja::changeEvalToProb(double sum, double eval)
+{
+	return eval / sum;
+}
+
 Populacja::Populacja(int* accuracy, int populationSize, int accSize, float** range)
 {
 	this->accuracy = accuracy;
@@ -76,7 +81,7 @@ void Populacja::printInfo()
 
 double* Populacja::getEvalMatrix()
 {
-	double* evalMatrix = new double[accSize];
+	double* evalMatrix = new double[populationSize];
 	for (int i = 0; i < populationSize; i++)
 	{
 		Osobnik* ind = &population[i];
@@ -92,62 +97,137 @@ double* Populacja::getEvalMatrix()
 	return evalMatrix;
 }
 
-map<Osobnik*, int> Populacja::createMapIndividualValue()
+vector<pair<Osobnik*, double>> Populacja::createVecIndividualValue()
 {
 	double* evalMatrix = getEvalMatrix();
-	map<Osobnik*, int> mapIndividualValue;
+	vector<pair<Osobnik*, double>> vecIndividualValue;
 	for (int i = 0; i < populationSize; i++)
 	{
-		mapIndividualValue.insert_or_assign(&population[i], evalMatrix[i]);
+		vecIndividualValue.push_back(make_pair(&population[i], evalMatrix[i]));
 	}
 	delete evalMatrix;
-	return mapIndividualValue;
+	return vecIndividualValue;
+}
+
+vector<pair<Osobnik*, double>> Populacja::sortVecInc(vector<pair<Osobnik*, double>> unsortedVec)
+{
+	vector<pair<Osobnik*, double>> pairs;
+	for (auto ite = unsortedVec.begin(); ite != unsortedVec.end(); ite++)
+	{
+		pairs.push_back(*ite);
+	}
+	sort(pairs.begin(), pairs.end(), [=](pair<Osobnik*, double> a, pair<Osobnik*, double>b) {return a.second < b.second; });
+	return pairs;
+}
+
+vector<pair<Osobnik*, double>> Populacja::sortVecDec(vector<pair<Osobnik*, double>> unsortedVec)
+{
+	vector<pair<Osobnik*, double>> pairs;
+	for (auto ite = unsortedVec.begin(); ite != unsortedVec.end(); ite++)
+	{
+		pairs.push_back(*ite);
+	}
+	sort(pairs.begin(), pairs.end(), [=](pair<Osobnik*, double> a, pair<Osobnik*, double>b) {return a.second > b.second; });
+	return pairs;
 }
 
 vector<Osobnik> Populacja::rouletteMin()
 {
-	map<Osobnik*, int> individualValue = createMapIndividualValue();
-	return vector<Osobnik>();
+	vector<pair<Osobnik*, double>> individualValue = createVecIndividualValue();
+
+	vector<Osobnik> newPopulation;
+	return newPopulation;
 }
 
 vector<Osobnik> Populacja::rouletteMax()
 {
-	map<Osobnik*, int> individualValue = createMapIndividualValue();
-	return vector<Osobnik>();
+	vector<pair<Osobnik*, double>> individualValue = createVecIndividualValue();
+	vector<Osobnik> newPopulation;
+	double sumOfEval = 0;
+	for (auto ite = individualValue.begin(); ite != individualValue.end(); ite++)
+	{
+		sumOfEval += ite->second;
+	}
+	for (auto ite = individualValue.begin(); ite != individualValue.end(); ite++)
+	{
+		ite->second = changeEvalToProb(sumOfEval, ite->second);
+	}
+
+	for (int i = 0; i < populationSize; i++)
+	{
+		double temp = 0;
+		double randomNumber = ((double)rand() / RAND_MAX);
+		for (auto ite = individualValue.cbegin(); ite != individualValue.cend(); ite++)
+		{
+			temp += ite->second;
+			if (temp >= randomNumber)
+			{
+				newPopulation.push_back(Osobnik(ite->first));
+				break;
+			}
+		}
+	}
+	return newPopulation;
 }
 
 vector<Osobnik> Populacja::rankMin()
 {
-	map<Osobnik*, int> individualValue = createMapIndividualValue();
-	return vector<Osobnik>();
+	vector<pair<Osobnik*, double>> individualValue = sortVecDec(createVecIndividualValue());
+	vector<Osobnik> newPopulation;
+	for (int i = 0; i < populationSize; i++)
+	{
+		int rand1 = rand() % populationSize;
+		newPopulation.push_back(Osobnik(individualValue[rand1 == 0 ? 0 : rand() % rand1].first));
+	}
+	return newPopulation;
 }
 
 vector<Osobnik> Populacja::rankMax()
 {
-	map<Osobnik*, int> individualValue = createMapIndividualValue();
-	return vector<Osobnik>();
+	vector<pair<Osobnik*, double>> individualValue = sortVecInc(createVecIndividualValue());
+	vector<Osobnik> newPopulation;
+	for (int i = 0; i < populationSize; i++)
+	{
+		int rand1 = rand() % populationSize;
+		newPopulation.push_back(Osobnik(individualValue[rand1 == 0 ? 0 : rand() % rand1].first));
+	}
+	return newPopulation;
 }
 
 vector<Osobnik> Populacja::tournamentMin()
 {
-	map<Osobnik*, int> individualValue = createMapIndividualValue();
-	return vector<Osobnik>();
+	vector<pair<Osobnik*, double>> individualValue = createVecIndividualValue();
+	vector<Osobnik> newPopulation;
+	return newPopulation;
 }
 
 vector<Osobnik> Populacja::tournamentMax()
 {
-	map<Osobnik*, int> individualValue = createMapIndividualValue();
-	return vector<Osobnik>();
+	vector<pair<Osobnik*, double>> individualValue = createVecIndividualValue();
+	vector<Osobnik> newPopulation;
+	return newPopulation;
 }
 
 vector<Osobnik> Populacja::tournamentReturnMin()
 {
-	map<Osobnik*, int> individualValue = createMapIndividualValue();
-	return vector<Osobnik>();
+	vector<pair<Osobnik*, double>> individualValue = createVecIndividualValue();
+	vector<Osobnik> newPopulation;
+	return newPopulation;
 }
 
 vector<Osobnik> Populacja::tournamentReturnMax()
 {
-	map<Osobnik*, int> individualValue = createMapIndividualValue();
-	return vector<Osobnik>();
+	vector<pair<Osobnik*, double>> individualValue = createVecIndividualValue();
+	vector<Osobnik> newPopulation;
+	return newPopulation;
+}
+
+void Populacja::setNewPopulation(vector<Osobnik>* newPopulation)
+{
+	population.clear();
+	while (!newPopulation->empty())
+	{
+		population.push_back(newPopulation->back());
+		newPopulation->pop_back();
+	}
 }

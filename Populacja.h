@@ -9,6 +9,7 @@ private:
 	int accSize;
 	int populationSize;
 	float** range;
+	double changeEvalToProb(double sum, double eval);
 public:
 	Populacja(int* accuracy, int populationNumber, int accNumber, float** range);
 	int setChromLen();
@@ -27,5 +28,8 @@ public:
 	vector<Osobnik> tournamentMax();
 	vector<Osobnik> tournamentReturnMin();
 	vector<Osobnik> tournamentReturnMax();
-	map<Osobnik*, int> createMapIndividualValue();
+	void setNewPopulation(vector<Osobnik>* newPopulation);
+	vector<pair<Osobnik*, double>> createVecIndividualValue();
+	vector<pair<Osobnik*, double>> sortVecInc(vector<pair<Osobnik*, double>>unordered_mapToSort);
+	vector<pair<Osobnik*, double>> sortVecDec(vector<pair<Osobnik*, double>> unordered_mapToSort);
 };

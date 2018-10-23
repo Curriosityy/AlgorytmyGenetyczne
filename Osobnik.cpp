@@ -8,6 +8,16 @@ Osobnik::Osobnik(int binChromLen, float** range)
 	this->range = range;
 	genChromosome();
 }
+Osobnik::Osobnik(const Osobnik* osobnik)
+{
+	binChromLen = osobnik->binChromLen;
+	chromosome = new bool[binChromLen];
+	this->range = osobnik->range;
+	for (int i = 0; i < binChromLen; i++)
+	{
+		chromosome[i] = osobnik->chromosome[i];
+	}
+}
 Osobnik::Osobnik(const Osobnik& osobnik)
 {
 	binChromLen = osobnik.binChromLen;
@@ -54,12 +64,12 @@ double* Osobnik::getChromValues(int* arrayOfBinAcc, int accSize)
 
 int Osobnik::getBinChromLen()
 {
-	return 0;
+	return binChromLen;
 }
 
 float ** Osobnik::getRange()
 {
-	return nullptr;
+	return range;
 }
 
 double Osobnik::eval(double* values, int size)

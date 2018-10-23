@@ -8,6 +8,7 @@ private:
 
 public:
 	Osobnik(int binChromLen, float** range);
+	Osobnik(const Osobnik* osobnik);
 	Osobnik(const Osobnik& osobnik);
 	void genChromosome();
 	~Osobnik();
