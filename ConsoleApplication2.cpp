@@ -6,7 +6,7 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	srand(time(NULL));
 	int accSize = 6;
-	int populationSize = 5;
+	int populationSize = 10;
 	int* acc = new int[accSize];
 	acc[0] = 1;
 	acc[1] = 2;
@@ -24,10 +24,24 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	cout.fill(' ');
 	Populacja pop(acc, populationSize, accSize, range);
+	cout << "________________Populacja przed wyborem____________________" << endl;
 	pop.printInfo();
 	auto roulettMax = pop.rouletteMax();
-	pop.rankMin();
-	cout << "____________________________________" << endl;
+	auto rankMin = pop.rankMin();
+	auto rankMax = pop.rankMax();
+	auto roulettMin = pop.rouletteMin();
+	cout << "________________roulettMax____________________" << endl;
+	pop.setNewPopulation(&roulettMax);
+	pop.printInfo();
+	cout << "________________roulettMin____________________" << endl;
+	pop.setNewPopulation(&roulettMin);
+	pop.printInfo();
+	cout << "__________________rankMin__________________" << endl;
+	pop.setNewPopulation(&rankMin);
+	pop.printInfo();
+	cout << "___________________rankMax_________________" << endl;
+	pop.setNewPopulation(&rankMax);
+	pop.printInfo();
 	getchar();
 	delete acc;
 	for (int i = 0; i < accSize; i++) {

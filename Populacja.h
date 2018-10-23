@@ -24,12 +24,12 @@ public:
 	vector<Osobnik> rouletteMax();
 	vector<Osobnik> rankMin();
 	vector<Osobnik> rankMax();
-	vector<Osobnik> tournamentMin();
-	vector<Osobnik> tournamentMax();
-	vector<Osobnik> tournamentReturnMin();
-	vector<Osobnik> tournamentReturnMax();
+	vector<Osobnik> tournamentMin(int numberOfGroups);
+	vector<Osobnik> tournamentMax(int numberOfGroups);
+	vector<Osobnik> tournamentReturnMin(int numberOfGroups);
+	vector<Osobnik> tournamentReturnMax(int numberOfGroups);
 	void setNewPopulation(vector<Osobnik>* newPopulation);
-	vector<pair<Osobnik*, double>> createVecIndividualValue();
+	vector<pair<Osobnik*, double>> createPairIndividualValue();
 	vector<pair<Osobnik*, double>> sortVecInc(vector<pair<Osobnik*, double>>unordered_mapToSort);
 	vector<pair<Osobnik*, double>> sortVecDec(vector<pair<Osobnik*, double>> unordered_mapToSort);
 };
