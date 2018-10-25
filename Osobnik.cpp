@@ -86,3 +86,33 @@ string Osobnik::printChromosome()
 {
 	return "";
 }
+void Osobnik::useGeneticOperators()
+{
+	mutate();
+	if (((double)rand() / RAND_MAX) < PI)
+		invert();
+}
+
+void Osobnik::invert()
+{
+	int from, to;
+	bool temp;
+	from = rand() % binChromLen;
+	to = (rand() % (binChromLen - from)) + from;
+	for (int i = from, j = to; i <= j; i++, j--)
+	{
+		if (chromosome[i] != chromosome[j]) {
+			temp = chromosome[i];
+			chromosome[i] = chromosome[j];
+			chromosome[j] = temp;
+		}
+	}
+}
+void Osobnik::mutate()
+{
+	for (int i = 0; i < binChromLen; i++)
+	{
+		if (((double)rand() / RAND_MAX) < PI)
+			chromosome[i] = !chromosome[i];
+	}
+}

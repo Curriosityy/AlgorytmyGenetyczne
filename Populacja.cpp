@@ -346,3 +346,10 @@ void Populacja::setNewPopulation(vector<Osobnik>* newPopulation)
 		newPopulation->pop_back();
 	}
 }
+void Populacja::useGeneticOperatorsOnPopulation()
+{
+	for (auto ite = population.begin(); ite!=population.end(); ite++)
+	{
+		ite->useGeneticOperators();
+	}
+}

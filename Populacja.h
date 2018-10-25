@@ -28,6 +28,7 @@ public:
 	vector<Osobnik> tournamentReturnMin(int numberOfGroups);
 	vector<Osobnik> tournamentReturnMax(int numberOfGroups);
 	void setNewPopulation(vector<Osobnik>* newPopulation);
+	void useGeneticOperatorsOnPopulation();
 private:
 	int setChromLen();
 	vector<pair<Osobnik*, double>> createPairIndividualValue();

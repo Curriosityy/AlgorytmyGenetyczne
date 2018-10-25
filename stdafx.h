@@ -5,6 +5,8 @@
 
 #pragma once
 #define C 10
+#define PM 0.1
+#define PI 0.1
 #include "targetver.h"
 #include <sstream>
 #include <functional>
@@ -18,6 +20,7 @@
 #include <vector>
 #include <iomanip>
 #include <map>
+#include <algorithm>
 using namespace std;
 
 // TODO: W tym miejscu odwo³aj siê do dodatkowych nag³ówków wymaganych przez program

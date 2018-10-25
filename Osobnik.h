@@ -5,7 +5,8 @@ private:
 	bool* chromosome;
 	int binChromLen;
 	float** range;
-
+	void mutate();
+	void invert();
 public:
 	Osobnik(int binChromLen, float** range);
 	Osobnik(const Osobnik* osobnik);
@@ -17,5 +18,6 @@ public:
 	int getBinChromLen();
 	float** getRange();
 	double eval(double* values, int size);
+	void useGeneticOperators();
 	string printChromosome();
 };
