@@ -133,28 +133,36 @@ vector<pair<Osobnik*, double>> Populacja::sortVecDec(vector<pair<Osobnik*, doubl
 
 vector<Osobnik> Populacja::rouletteMin()
 {
-	vector<pair<Osobnik*, double>> individualValue = sortVecDec(createPairIndividualValue());
+	vector<pair<Osobnik*, double>> individualValue = createPairIndividualValue();
 	vector<Osobnik> newPopulation;
 	double sumOfEval = 0;
+	double max = 0;
 	for (auto ite = individualValue.begin(); ite != individualValue.end(); ite++)
 	{
+		if (max < ite->second)
+		{
+			max = ite->second;
+		}
+	}
+	for (auto ite = individualValue.begin(); ite != individualValue.end(); ite++)
+	{
+		ite->second = max - ite->second + 1;
 		sumOfEval += ite->second;
 	}
 	for (auto ite = individualValue.begin(); ite != individualValue.end(); ite++)
 	{
 		ite->second = changeEvalToProb(sumOfEval, ite->second);
 	}
-
 	for (int i = 0; i < populationSize; i++)
 	{
 		double temp = 0;
 		double randomNumber = ((double)rand() / RAND_MAX);
-		for (auto ite = individualValue.cbegin(), ite2 = individualValue.cend() - 1; ite != individualValue.cend(); ite++, ite2--)
+		for (auto ite = individualValue.cbegin(); ite != individualValue.cend(); ite++)
 		{
 			temp += ite->second;
 			if (temp >= randomNumber)
 			{
-				newPopulation.push_back(Osobnik(ite2->first));
+				newPopulation.push_back(Osobnik(ite->first));
 				break;
 			}
 		}
@@ -164,7 +172,7 @@ vector<Osobnik> Populacja::rouletteMin()
 
 vector<Osobnik> Populacja::rouletteMax()
 {
-	vector<pair<Osobnik*, double>> individualValue = sortVecDec(createPairIndividualValue());
+	vector<pair<Osobnik*, double>> individualValue = createPairIndividualValue();
 	vector<Osobnik> newPopulation;
 	double sumOfEval = 0;
 	for (auto ite = individualValue.begin(); ite != individualValue.end(); ite++)
@@ -348,7 +356,7 @@ void Populacja::setNewPopulation(vector<Osobnik>* newPopulation)
 }
 void Populacja::useGeneticOperatorsOnPopulation()
 {
-	for (auto ite = population.begin(); ite!=population.end(); ite++)
+	for (auto ite = population.begin(); ite != population.end(); ite++)
 	{
 		ite->useGeneticOperators();
 	}
