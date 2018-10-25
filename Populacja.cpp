@@ -136,17 +136,21 @@ vector<Osobnik> Populacja::rouletteMin()
 	vector<pair<Osobnik*, double>> individualValue = createPairIndividualValue();
 	vector<Osobnik> newPopulation;
 	double sumOfEval = 0;
-	double max = 0;
+	double max = numeric_limits<double>::min(), min = numeric_limits<double>::max();
 	for (auto ite = individualValue.begin(); ite != individualValue.end(); ite++)
 	{
 		if (max < ite->second)
 		{
 			max = ite->second;
 		}
+		if (min > ite->second)
+		{
+			min = ite->second;
+		}
 	}
 	for (auto ite = individualValue.begin(); ite != individualValue.end(); ite++)
 	{
-		ite->second = max - ite->second + 1;
+		ite->second = max - ite->second + min;
 		sumOfEval += ite->second;
 	}
 	for (auto ite = individualValue.begin(); ite != individualValue.end(); ite++)
