@@ -5,19 +5,23 @@ private:
 	bool* chromosome;
 	int binChromLen;
 	float** range;
-	void mutate();
-	void invert();
 public:
 	Osobnik(int binChromLen, float** range);
 	Osobnik(const Osobnik* osobnik);
 	Osobnik(const Osobnik& osobnik);
-	void genChromosome();
+	bool* genChromosome();
 	~Osobnik();
 	bool* getChromosome();
 	double* getChromValues(int* arrayOfBinAcc, int accSize);
 	int getBinChromLen();
+	int getChromLen();
 	float** getRange();
 	double eval(double* values, int size);
-	void useGeneticOperators();
-	string printChromosome();
+	Osobnik mutate();
+	Osobnik invert();
+	pair<Osobnik, Osobnik> crossingMultipoint(int n, Osobnik * osobnik);
+	pair<Osobnik, Osobnik> evenly(Osobnik * osobnik);
+	pair<Osobnik, Osobnik> crossingOnePoint(Osobnik * osobnik);
+	pair<Osobnik, Osobnik> crossingTwoPoints(Osobnik * osobnik);
+	void printChromosome();
 };

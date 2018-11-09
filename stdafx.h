@@ -7,6 +7,7 @@
 #define C 10
 #define PM 0.1
 #define PI 0.1
+#define PK 1
 #include "targetver.h"
 #include <sstream>
 #include <functional>
@@ -22,6 +23,7 @@
 #include <map>
 #include <algorithm>
 #include <limits>
+#include <list>
 using namespace std;
 
 // TODO: W tym miejscu odwo³aj siê do dodatkowych nag³ówków wymaganych przez program

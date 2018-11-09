@@ -229,6 +229,60 @@ vector<Osobnik> Populacja::rankMax()
 	return newPopulation;
 }
 
+void Populacja::crossingTest()
+{
+	vector<Osobnik> toCrossing;
+	vector<int> deck;
+	int decker = 0;
+	for (auto ite = population.begin(); ite != population.end(); ++ite)
+	{
+		if (((double)rand() / RAND_MAX) < PK)
+		{
+			toCrossing.push_back(Osobnik(*ite));
+			deck.push_back(decker);
+			decker++;
+		}
+	}
+	shuffle(deck.begin(), deck.end(), default_random_engine(time(NULL)));
+	if (toCrossing.size() % 2 == 1)
+	{
+		toCrossing.erase(toCrossing.begin() + deck.back());
+		deck.pop_back();
+	}
+	vector<Osobnik> childs;
+	vector<Osobnik> childs1;
+	vector<Osobnik> childs2;
+	vector<Osobnik> childs3;
+	for (int i = 0; i < deck.size(); i += 2)
+	{
+		pair<Osobnik, Osobnik> childsPair = toCrossing[deck[i]].crossingOnePoint(&toCrossing[deck[i + 1]]);
+		childs.push_back(childsPair.first);
+		childs.push_back(childsPair.second);
+	}
+	cout << "---------------------------------------------------------------\n";
+	for (int i = 0; i < toCrossing.size(); i += 2)
+	{
+		pair<Osobnik, Osobnik> childsPair1 = toCrossing[deck[i]].crossingTwoPoints(&toCrossing[deck[i + 1]]);
+		childs.push_back(childsPair1.first);
+		childs.push_back(childsPair1.second);
+	}
+	cout << "---------------------------------------------------------------\n";
+	for (int i = 0; i < toCrossing.size(); i += 2)
+	{
+		pair<Osobnik, Osobnik> childsPair2 = toCrossing[deck[i]].crossingMultipoint(rand() % (population[0].getChromLen() / 3), &toCrossing[deck[i + 1]]);
+		childs.push_back(childsPair2.first);
+		childs.push_back(childsPair2.second);
+	}
+	cout << "---------------------------------------------------------------\n";
+	for (int i = 0; i < toCrossing.size(); i += 2)
+	{
+		pair<Osobnik, Osobnik> childsPair3 = toCrossing[deck[i]].evenly(&toCrossing[deck[i + 1]]);
+		childs.push_back(childsPair3.first);
+		childs.push_back(childsPair3.second);
+	}
+	cout << "---------------------------------------------------------------\n";
+}
+
 vector<Osobnik> Populacja::tournamentMin(int numberOfGroups)
 {
 	vector<pair<Osobnik*, double>> individualValue = createPairIndividualValue();
@@ -358,10 +412,10 @@ void Populacja::setNewPopulation(vector<Osobnik>* newPopulation)
 		newPopulation->pop_back();
 	}
 }
-void Populacja::useGeneticOperatorsOnPopulation()
+void Populacja::sukcesja()
 {
 	for (auto ite = population.begin(); ite != population.end(); ite++)
 	{
-		ite->useGeneticOperators();
+		//ite->useGeneticOperators();
 	}
 }

@@ -6,7 +6,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	srand(time(NULL));
 	int chosedMethod;
 	int accSize = 6;
-	int populationSize = 10;
+	int populationSize = 2;
 	int* acc = new int[accSize];
 	acc[0] = 1;
 	acc[1] = 2;
@@ -22,18 +22,19 @@ int _tmain(int argc, _TCHAR* argv[])
 		range[i][1] = 1.0f;
 	}
 	cout << "1-Ruletka Max 2-Ruletka Min 3-Rankingowa Max 4-Rankingowa Min 5-Turniejowa Max 6-Turniejowa Min 7-Turniejowa ze zwracaniem Max 8-Truniejowa ze zwracaniem Min" << endl;
-	cin >> chosedMethod;
+	//cin >> chosedMethod;
+	chosedMethod = 1;
 	cout.fill(' ');
 	Populacja pop(acc, populationSize, accSize, range);
 	cout << "________________Populacja przed wyborem____________________" << endl;
-	pop.printInfo();
+	//pop.printInfo();
 	switch (chosedMethod)
 	{
 	case 1:
-		pop.setNewPopulation(&pop.rouletteMax());
+		//pop.setNewPopulation(&pop.rouletteMax());
 		cout << "________________roulettMax____________________" << endl;
-		pop.printInfo();
-		pop.useGeneticOperatorsOnPopulation();
+		//	pop.printInfo();
+		pop.crossingTest();
 		cout << "__________________After operations__________________" << endl;
 		pop.printInfo();
 		break;
@@ -41,7 +42,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		pop.setNewPopulation(&pop.rouletteMin());
 		cout << "________________roulettMin____________________" << endl;
 		pop.printInfo();
-		pop.useGeneticOperatorsOnPopulation();
+		pop.sukcesja();
 		cout << "__________________After operations__________________" << endl;
 		pop.printInfo();
 		break;
@@ -49,7 +50,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		pop.setNewPopulation(&pop.rankMax());
 		cout << "___________________rankMax_________________" << endl;
 		pop.printInfo();
-		pop.useGeneticOperatorsOnPopulation();
+		pop.sukcesja();
 		cout << "__________________After operations__________________" << endl;
 		pop.printInfo();
 		break;
@@ -57,7 +58,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		pop.setNewPopulation(&pop.rankMin());
 		cout << "__________________rankMin__________________" << endl;
 		pop.printInfo();
-		pop.useGeneticOperatorsOnPopulation();
+		pop.sukcesja();
 		cout << "__________________After operations__________________" << endl;
 		pop.printInfo();
 		break;
@@ -65,7 +66,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << "________________tournamentMin____________________" << endl;
 		pop.setNewPopulation(&pop.tournamentMin(2));
 		pop.printInfo();
-		pop.useGeneticOperatorsOnPopulation();
+		pop.sukcesja();
 		cout << "__________________After operations__________________" << endl;
 		pop.printInfo();
 		break;
@@ -73,7 +74,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		pop.setNewPopulation(&pop.tournamentMax(2));
 		cout << "________________tournamentMax____________________" << endl;
 		pop.printInfo();
-		pop.useGeneticOperatorsOnPopulation();
+		pop.sukcesja();
 		cout << "__________________After operations__________________" << endl;
 		pop.printInfo();
 		break;
@@ -81,7 +82,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		pop.setNewPopulation(&pop.tournamentReturnMax(2));
 		cout << "__________________tournamentReturnMax__________________" << endl;
 		pop.printInfo();
-		pop.useGeneticOperatorsOnPopulation();
+		pop.sukcesja();
 		cout << "__________________After operations__________________" << endl;
 		pop.printInfo();
 		break;
@@ -89,7 +90,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		cout << "___________________tournamentReturnMin_________________" << endl;
 		pop.setNewPopulation(&pop.tournamentReturnMin(2));
 		pop.printInfo();
-		pop.useGeneticOperatorsOnPopulation();
+		pop.sukcesja();
 		cout << "__________________After operations__________________" << endl;
 		pop.printInfo();
 		break;

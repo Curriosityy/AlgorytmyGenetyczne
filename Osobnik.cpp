@@ -4,9 +4,8 @@
 Osobnik::Osobnik(int binChromLen, float** range)
 {
 	this->binChromLen = binChromLen;
-	chromosome = new bool[binChromLen];
 	this->range = range;
-	genChromosome();
+	chromosome = genChromosome();
 }
 Osobnik::Osobnik(const Osobnik* osobnik)
 {
@@ -28,12 +27,14 @@ Osobnik::Osobnik(const Osobnik& osobnik)
 	}
 	range = osobnik.range;
 }
-void Osobnik::genChromosome()
+bool* Osobnik::genChromosome()
 {
+	bool* chrom = new bool[binChromLen];
 	for (int i = 0; i < binChromLen; i++)
 	{
-		chromosome[i] = rand() % 2;
+		chrom[i] = rand() % 2;
 	}
+	return chrom;
 }
 Osobnik::~Osobnik()
 {
@@ -67,6 +68,11 @@ int Osobnik::getBinChromLen()
 	return binChromLen;
 }
 
+int Osobnik::getChromLen()
+{
+	return binChromLen;
+}
+
 float ** Osobnik::getRange()
 {
 	return range;
@@ -82,37 +88,296 @@ double Osobnik::eval(double* values, int size)
 	return adapt;
 }
 
-string Osobnik::printChromosome()
+void Osobnik::printChromosome()
 {
-	return "";
-}
-void Osobnik::useGeneticOperators()
-{
-	mutate();
-	if (((double)rand() / RAND_MAX) < PI)
-		invert();
+	for (int i = 0; i < binChromLen; i++)
+	{
+		cout << chromosome[i];
+	}
+	cout << endl;
 }
 
-void Osobnik::invert()
+Osobnik Osobnik::invert()
 {
 	int from, to;
 	bool temp;
 	from = rand() % binChromLen;
 	to = (rand() % (binChromLen - from)) + from;
-	for (int i = from, j = to; i <= j; i++, j--)
+	Osobnik nowy(this);
+	for (int i = from, j = to; i < j; i++, j--)
 	{
-		if (chromosome[i] != chromosome[j]) {
-			temp = chromosome[i];
-			chromosome[i] = chromosome[j];
-			chromosome[j] = temp;
-		}
+		temp = nowy.chromosome[i];
+		nowy.chromosome[i] = nowy.chromosome[j];
+		nowy.chromosome[j] = temp;
 	}
+	return nowy;
 }
-void Osobnik::mutate()
+Osobnik Osobnik::mutate()
 {
+	Osobnik nowy(this);
 	for (int i = 0; i < binChromLen; i++)
 	{
 		if (((double)rand() / RAND_MAX) < PI)
-			chromosome[i] = !chromosome[i];
+			nowy.chromosome[i] = !nowy.chromosome[i];
 	}
+	return nowy;
+}
+pair<Osobnik, Osobnik> Osobnik::crossingMultipoint(int n, Osobnik* osobnik)
+{
+	Osobnik potomek1(this);
+	Osobnik potomek2(osobnik);
+	int* crossingPoints = new int[n + 1];
+	for (int i = 0; i < n; i++)
+	{
+		crossingPoints[i] = rand() % binChromLen;
+	}
+	crossingPoints[n] = binChromLen;
+	sort(crossingPoints, crossingPoints + n + 1);
+	n = unique(crossingPoints, crossingPoints + n + 1) - crossingPoints;
+	bool rodzic = false;
+	int crossing = 0;
+	{
+		//toDelete
+		for (int i = 0, j = 0; i < binChromLen; i++)
+		{
+			cout << potomek1.chromosome[i];
+			if (i == crossingPoints[j])
+			{
+				cout << "|";
+				j++;
+			}
+		}
+		cout << endl;
+		for (int i = 0, j = 0; i < binChromLen; i++)
+		{
+			cout << potomek2.chromosome[i];
+			if (i == crossingPoints[j])
+			{
+				cout << "|";
+				j++;
+			}
+		}
+		cout << endl;
+		//
+	}
+	for (int i = 0; i < binChromLen; i++)
+	{
+		if (crossingPoints[crossing] < i)
+		{
+			rodzic = !rodzic;
+			crossing++;
+		}
+		if (rodzic)
+		{
+			potomek2.chromosome[i] = chromosome[i];
+			potomek1.chromosome[i] = osobnik->chromosome[i];
+		}
+	}
+	{
+		//toDelete
+		for (int i = 0, j = 0; i < binChromLen; i++)
+		{
+			cout << potomek1.chromosome[i];
+			if (i == crossingPoints[j])
+			{
+				cout << "|";
+				j++;
+			}
+		}
+		cout << endl;
+		for (int i = 0, j = 0; i < binChromLen; i++)
+		{
+			cout << potomek2.chromosome[i];
+			if (i == crossingPoints[j])
+			{
+				cout << "|";
+				j++;
+			}
+		}
+		cout << endl;
+		//
+	}
+	delete crossingPoints;
+	return make_pair(potomek1, potomek2);
+}
+
+pair<Osobnik, Osobnik> Osobnik::crossingOnePoint(Osobnik* osobnik)
+{
+	Osobnik potomek1(this);
+	Osobnik potomek2(osobnik);
+	int crossingPoints = rand() % binChromLen;
+	int temp = crossingPoints;
+	bool rodzic = false;
+	{
+		//toDelete
+		for (int i = 0; i < binChromLen; i++)
+		{
+			cout << potomek1.chromosome[i];
+			if (i == temp)
+			{
+				cout << "|";
+			}
+		}
+		cout << endl;
+		for (int i = 0; i < binChromLen; i++)
+		{
+			cout << potomek2.chromosome[i];
+			if (i == temp)
+			{
+				cout << "|";
+			}
+		}
+		cout << endl;
+		//
+	}
+	for (int i = 0; i < binChromLen; i++)
+	{
+		if (crossingPoints < i)
+		{
+			rodzic = !rodzic;
+			crossingPoints = binChromLen;
+		}
+		if (rodzic)
+		{
+			potomek2.chromosome[i] = chromosome[i];
+			potomek1.chromosome[i] = osobnik->chromosome[i];
+		}
+	}
+	{
+		//toDelete
+		for (int i = 0; i < binChromLen; i++)
+		{
+			cout << potomek1.chromosome[i];
+			if (i == temp)
+			{
+				cout << "|";
+			}
+		}
+		cout << endl;
+		for (int i = 0; i < binChromLen; i++)
+		{
+			cout << potomek2.chromosome[i];
+			if (i == temp)
+			{
+				cout << "|";
+			}
+		}
+		cout << endl;
+		//
+	}
+	return make_pair(potomek1, potomek2);
+}
+pair<Osobnik, Osobnik> Osobnik::crossingTwoPoints(Osobnik * osobnik)
+{
+	Osobnik potomek1(this);
+	Osobnik potomek2(osobnik);
+	int* crossingPoints = new int[3];
+	for (int i = 0; i < 2; i++)
+	{
+		if (i == 0)
+		{
+			crossingPoints[i] = rand() % binChromLen;
+		}
+		else
+		{
+			crossingPoints[i] = (rand() % (binChromLen - crossingPoints[i - 1])) + crossingPoints[i - 1];
+		}
+	}
+	crossingPoints[2] = binChromLen;
+	bool rodzic = false;
+	int crossing = 0;
+	{
+		//toDelete
+		for (int i = 0, j = 0; i < binChromLen; i++)
+		{
+			cout << potomek1.chromosome[i];
+			if (i == crossingPoints[j])
+			{
+				cout << "|";
+				j++;
+			}
+		}
+		cout << endl;
+		for (int i = 0, j = 0; i < binChromLen; i++)
+		{
+			cout << potomek2.chromosome[i];
+			if (i == crossingPoints[j])
+			{
+				cout << "|";
+				j++;
+			}
+		}
+		cout << endl;
+		//
+	}
+	for (int i = 0; i < binChromLen; i++)
+	{
+		if (crossingPoints[crossing] < i)
+		{
+			rodzic = !rodzic;
+			crossing++;
+		}
+		if (rodzic)
+		{
+			potomek2.chromosome[i] = chromosome[i];
+			potomek1.chromosome[i] = osobnik->chromosome[i];
+		}
+	}
+	{
+		//toDelete
+		for (int i = 0, j = 0; i < binChromLen; i++)
+		{
+			cout << potomek1.chromosome[i];
+			if (i == crossingPoints[j])
+			{
+				cout << "|";
+				j++;
+			}
+		}
+		cout << endl;
+		for (int i = 0, j = 0; i < binChromLen; i++)
+		{
+			cout << potomek2.chromosome[i];
+			if (i == crossingPoints[j])
+			{
+				cout << "|";
+				j++;
+			}
+		}
+		cout << endl;
+		//
+	}
+	delete crossingPoints;
+	return make_pair(potomek1, potomek2);
+}
+pair<Osobnik, Osobnik> Osobnik::evenly(Osobnik * osobnik)
+{
+	bool* pattern = genChromosome();
+	Osobnik potomek1(this);
+	Osobnik potomek2(osobnik);
+	{
+		potomek1.printChromosome();
+		potomek2.printChromosome();
+	}
+	cout << "--------------------Pattern--------------------\n";
+	for (int i = 0; i < binChromLen; i++)
+	{
+		if (pattern) {
+			potomek1.chromosome[i] = osobnik->chromosome[i];
+			potomek2.chromosome[i] = chromosome[i];
+		}
+	}
+	{
+		for (int i = 0; i < binChromLen; i++)
+		{
+			cout << pattern[i];
+		}
+		cout << "\n-----------------------------------------------\n";
+		{
+			potomek1.printChromosome();
+			potomek2.printChromosome();
+		}
+	}
+	delete pattern;
+	return make_pair(potomek1, potomek2);
 }
