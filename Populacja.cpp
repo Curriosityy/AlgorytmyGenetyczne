@@ -269,7 +269,7 @@ void Populacja::crossingTest()
 	cout << "---------------------------------------------------------------\n";
 	for (int i = 0; i < toCrossing.size(); i += 2)
 	{
-		pair<Osobnik, Osobnik> childsPair2 = toCrossing[deck[i]].crossingMultipoint(rand() % (population[0].getChromLen() / 3), &toCrossing[deck[i + 1]]);
+		pair<Osobnik, Osobnik> childsPair2 = toCrossing[deck[i]].crossingMultipoint(rand() % (population[0].getChromLen() / 7), &toCrossing[deck[i + 1]]);
 		childs.push_back(childsPair2.first);
 		childs.push_back(childsPair2.second);
 	}

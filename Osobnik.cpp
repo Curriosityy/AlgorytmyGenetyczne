@@ -271,18 +271,15 @@ pair<Osobnik, Osobnik> Osobnik::crossingTwoPoints(Osobnik * osobnik)
 {
 	Osobnik potomek1(this);
 	Osobnik potomek2(osobnik);
-	int* crossingPoints = new int[3];
-	for (int i = 0; i < 2; i++)
+	int n = 2;
+	int* crossingPoints = new int[n + 1];
+	for (int i = 0; i < n; i++)
 	{
-		if (i == 0)
-		{
-			crossingPoints[i] = rand() % binChromLen;
-		}
-		else
-		{
-			crossingPoints[i] = (rand() % (binChromLen - crossingPoints[i - 1])) + crossingPoints[i - 1];
-		}
+		crossingPoints[i] = rand() % binChromLen;
 	}
+	crossingPoints[n] = binChromLen;
+	sort(crossingPoints, crossingPoints + n + 1);
+	n = unique(crossingPoints, crossingPoints + n + 1) - crossingPoints;
 	crossingPoints[2] = binChromLen;
 	bool rodzic = false;
 	int crossing = 0;
