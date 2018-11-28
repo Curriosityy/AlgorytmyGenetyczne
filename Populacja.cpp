@@ -440,15 +440,20 @@ void Populacja::sukcesjaCzesciowa()
 		dziecioki.push_back(childsPair2.first);
 		dziecioki.push_back(childsPair2.second);
 	}
+
 	for (int i = 0; i < parentToDelete; i++)
 	{
 		population.erase(population.begin() + rand() % population.size());
 	}
+	vector<int> deck2;
+	for (int i = 0; i < dziecioki.size(); i++)
+	{
+		deck2.push_back(i);
+	}
+	shuffle(deck2.begin(), deck2.end(), default_random_engine(time(NULL)));
 	for (int i = 0; i < childToPick; i++)
 	{
-		int childToAdd = rand() % dziecioki.size();
-		population.push_back(dziecioki[childToAdd]);
-		dziecioki.erase(dziecioki.begin() + childToAdd);
+		population.push_back(dziecioki[deck2[i]]);
 	}
 }
 
@@ -490,13 +495,15 @@ void Populacja::sukcesjaLosowa()
 		dziecioki.push_back(childsPair2.second);
 	}
 	population.clear();
-	int a = dziecioki.size();
+	vector<int> deck2;
+	for (int i = 0; i < dziecioki.size(); i++)
+	{
+		deck2.push_back(i);
+	}
+	shuffle(deck2.begin(), deck2.end(), default_random_engine(time(NULL)));
 	for (int i = 0; i < populationSize; i++)
 	{
-		int childToAdd = rand() % a;
-		population.push_back(dziecioki[childToAdd]);
-		dziecioki.erase(dziecioki.begin() + childToAdd);
-		--a;
+		population.push_back(dziecioki[deck2[i]]);
 	}
 	dziecioki.clear();
 }
