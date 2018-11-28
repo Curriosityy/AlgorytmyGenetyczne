@@ -3,6 +3,7 @@
 class Populacja
 {
 private:
+	bool max = false;
 	vector<Osobnik> population;
 	int* accuracy;
 	int* arrayOfBinAccuLen;
@@ -28,9 +29,12 @@ public:
 	vector<Osobnik> tournamentReturnMin(int numberOfGroups);
 	vector<Osobnik> tournamentReturnMax(int numberOfGroups);
 	void setNewPopulation(vector<Osobnik>* newPopulation);
-	void sukcesja();
-	void crossingTest();
+	void sukcesja(int i);
 private:
+	void sukcesjaPelna();
+	void sukcesjaCzesciowa();
+	void sukcesjaLosowa();
+	void sukcesjaElitarna();
 	int setChromLen();
 	vector<pair<Osobnik*, double>> createPairIndividualValue();
 	vector<pair<Osobnik*, double>> sortVecInc(vector<pair<Osobnik*, double>>unordered_mapToSort);

@@ -133,6 +133,7 @@ vector<pair<Osobnik*, double>> Populacja::sortVecDec(vector<pair<Osobnik*, doubl
 
 vector<Osobnik> Populacja::rouletteMin()
 {
+	max = false;
 	vector<pair<Osobnik*, double>> individualValue = createPairIndividualValue();
 	vector<Osobnik> newPopulation;
 	double sumOfEval = 0;
@@ -176,6 +177,7 @@ vector<Osobnik> Populacja::rouletteMin()
 
 vector<Osobnik> Populacja::rouletteMax()
 {
+	max = true;
 	vector<pair<Osobnik*, double>> individualValue = createPairIndividualValue();
 	vector<Osobnik> newPopulation;
 	double sumOfEval = 0;
@@ -207,6 +209,7 @@ vector<Osobnik> Populacja::rouletteMax()
 
 vector<Osobnik> Populacja::rankMin()
 {
+	max = false;
 	vector<pair<Osobnik*, double>> individualValue = sortVecInc(createPairIndividualValue());
 	vector<Osobnik> newPopulation;
 	for (int i = 0; i < populationSize; i++)
@@ -219,6 +222,7 @@ vector<Osobnik> Populacja::rankMin()
 
 vector<Osobnik> Populacja::rankMax()
 {
+	max = true;
 	vector<pair<Osobnik*, double>> individualValue = sortVecDec(createPairIndividualValue());
 	vector<Osobnik> newPopulation;
 	for (int i = 0; i < populationSize; i++)
@@ -229,62 +233,9 @@ vector<Osobnik> Populacja::rankMax()
 	return newPopulation;
 }
 
-void Populacja::crossingTest()
-{
-	vector<Osobnik> toCrossing;
-	vector<int> deck;
-	int decker = 0;
-	for (auto ite = population.begin(); ite != population.end(); ++ite)
-	{
-		if (((double)rand() / RAND_MAX) < PK)
-		{
-			toCrossing.push_back(Osobnik(*ite));
-			deck.push_back(decker);
-			decker++;
-		}
-	}
-	shuffle(deck.begin(), deck.end(), default_random_engine(time(NULL)));
-	if (toCrossing.size() % 2 == 1)
-	{
-		toCrossing.erase(toCrossing.begin() + deck.back());
-		deck.pop_back();
-	}
-	vector<Osobnik> childs;
-	vector<Osobnik> childs1;
-	vector<Osobnik> childs2;
-	vector<Osobnik> childs3;
-	for (int i = 0; i < deck.size(); i += 2)
-	{
-		pair<Osobnik, Osobnik> childsPair = toCrossing[deck[i]].crossingOnePoint(&toCrossing[deck[i + 1]]);
-		childs.push_back(childsPair.first);
-		childs.push_back(childsPair.second);
-	}
-	cout << "---------------------------------------------------------------\n";
-	for (int i = 0; i < toCrossing.size(); i += 2)
-	{
-		pair<Osobnik, Osobnik> childsPair1 = toCrossing[deck[i]].crossingTwoPoints(&toCrossing[deck[i + 1]]);
-		childs.push_back(childsPair1.first);
-		childs.push_back(childsPair1.second);
-	}
-	cout << "---------------------------------------------------------------\n";
-	for (int i = 0; i < toCrossing.size(); i += 2)
-	{
-		pair<Osobnik, Osobnik> childsPair2 = toCrossing[deck[i]].crossingMultipoint(rand() % (population[0].getChromLen() / 7), &toCrossing[deck[i + 1]]);
-		childs.push_back(childsPair2.first);
-		childs.push_back(childsPair2.second);
-	}
-	cout << "---------------------------------------------------------------\n";
-	for (int i = 0; i < toCrossing.size(); i += 2)
-	{
-		pair<Osobnik, Osobnik> childsPair3 = toCrossing[deck[i]].evenly(&toCrossing[deck[i + 1]]);
-		childs.push_back(childsPair3.first);
-		childs.push_back(childsPair3.second);
-	}
-	cout << "---------------------------------------------------------------\n";
-}
-
 vector<Osobnik> Populacja::tournamentMin(int numberOfGroups)
 {
+	max = false;
 	vector<pair<Osobnik*, double>> individualValue = createPairIndividualValue();
 	map<Osobnik*, double> battleGroup;
 	map<Osobnik*, double>::iterator ite;
@@ -317,6 +268,7 @@ vector<Osobnik> Populacja::tournamentMin(int numberOfGroups)
 
 vector<Osobnik> Populacja::tournamentMax(int numberOfGroups)
 {
+	max = true;
 	vector<pair<Osobnik*, double>> individualValue = createPairIndividualValue();
 	vector<Osobnik> newPopulation;
 	map<Osobnik*, double> battleGroup;
@@ -349,6 +301,7 @@ vector<Osobnik> Populacja::tournamentMax(int numberOfGroups)
 
 vector<Osobnik> Populacja::tournamentReturnMin(int numberOfGroups)
 {
+	max = false;
 	vector<pair<Osobnik*, double>> individualValue = createPairIndividualValue();
 	vector<Osobnik> newPopulation;
 	vector<pair<Osobnik*, double>> battleGroup;
@@ -377,6 +330,7 @@ vector<Osobnik> Populacja::tournamentReturnMin(int numberOfGroups)
 
 vector<Osobnik> Populacja::tournamentReturnMax(int numberOfGroups)
 {
+	max = true;
 	vector<pair<Osobnik*, double>> individualValue = createPairIndividualValue();
 	vector<Osobnik> newPopulation;
 	vector<pair<Osobnik*, double>> battleGroup;
@@ -412,10 +366,220 @@ void Populacja::setNewPopulation(vector<Osobnik>* newPopulation)
 		newPopulation->pop_back();
 	}
 }
-void Populacja::sukcesja()
+
+void Populacja::sukcesjaPelna()
 {
-	for (auto ite = population.begin(); ite != population.end(); ite++)
+	for (int i = 0; i < populationSize; i++)
 	{
-		//ite->useGeneticOperators();
+		population[i] = population[i].mutate();
+		if (((double)rand() / RAND_MAX) < PI)
+			population[i] = population[i].invert();
+	}
+	vector<Osobnik> toCrossing;
+	vector<int> deck;
+	int decker = 0;
+	for (auto ite = population.begin(); ite != population.end(); ++ite)
+	{
+		if (((double)rand() / RAND_MAX) < PK)
+		{
+			toCrossing.push_back(Osobnik(*ite));
+			deck.push_back(decker);
+			decker++;
+		}
+	}
+	shuffle(deck.begin(), deck.end(), default_random_engine(time(NULL)));
+	if (toCrossing.size() % 2 == 1)
+	{
+		//toCrossing.erase(toCrossing.begin() + deck.back());
+		deck.pop_back();
+	}
+	vector<Osobnik> childs;
+	for (int i = 0; i < deck.size(); i += 2)
+	{
+		pair<Osobnik, Osobnik> childsPair2 = toCrossing[deck[i]].crossing(CROSSINGMETHOD, &toCrossing[deck[i + 1]]);
+		childs.push_back(childsPair2.first);
+		childs.push_back(childsPair2.second);
+	}
+	for (int i = 0; i < childs.size(); i++)
+	{
+		population[deck[i]] = childs[i];
+	}
+}
+void Populacja::sukcesjaCzesciowa()
+{
+	int childToPick = populationSize * CP;
+	int parentToDelete = populationSize - childToPick;
+	vector<Osobnik> dziecioki;
+	for (int i = 0; i < populationSize; i++)
+	{
+		dziecioki.push_back(population[i].mutate());
+		if (((double)rand() / RAND_MAX) < PI)
+			dziecioki.push_back(population[i].invert());
+	}
+	vector<Osobnik> toCrossing;
+	vector<int> deck;
+	int decker = 0;
+	for (auto ite = population.begin(); ite != population.end(); ++ite)
+	{
+		if (((double)rand() / RAND_MAX) < PK)
+		{
+			toCrossing.push_back(Osobnik(*ite));
+			deck.push_back(decker);
+			decker++;
+		}
+	}
+	shuffle(deck.begin(), deck.end(), default_random_engine(time(NULL)));
+	if (toCrossing.size() % 2 == 1)
+	{
+		//toCrossing.erase(toCrossing.begin() + deck.back());
+		deck.pop_back();
+	}
+	for (int i = 0; i < deck.size(); i += 2)
+	{
+		pair<Osobnik, Osobnik> childsPair2 = toCrossing[deck[i]].crossing(CROSSINGMETHOD, &toCrossing[deck[i + 1]]);
+		dziecioki.push_back(childsPair2.first);
+		dziecioki.push_back(childsPair2.second);
+	}
+	for (int i = 0; i < parentToDelete; i++)
+	{
+		population.erase(population.begin() + rand() % population.size());
+	}
+	for (int i = 0; i < childToPick; i++)
+	{
+		int childToAdd = rand() % dziecioki.size();
+		population.push_back(dziecioki[childToAdd]);
+		dziecioki.erase(dziecioki.begin() + childToAdd);
+	}
+}
+
+void Populacja::sukcesjaLosowa()
+{
+	vector<Osobnik> dziecioki;
+	for (int i = 0; i < population.size(); i++)
+	{
+		dziecioki.push_back(population[i]);
+	}
+	for (int i = 0; i < populationSize; i++)
+	{
+		dziecioki.push_back(population[i].mutate());
+		if (((double)rand() / RAND_MAX) < PI)
+			dziecioki.push_back(population[i].invert());
+	}
+	vector<Osobnik> toCrossing;
+	vector<int> deck;
+	int decker = 0;
+	for (auto ite = population.begin(); ite != population.end(); ++ite)
+	{
+		if (((double)rand() / RAND_MAX) < PK)
+		{
+			toCrossing.push_back(Osobnik(*ite));
+			deck.push_back(decker);
+			decker++;
+		}
+	}
+	shuffle(deck.begin(), deck.end(), default_random_engine(time(NULL)));
+	if (toCrossing.size() % 2 == 1)
+	{
+		//toCrossing.erase(toCrossing.begin() + deck.back());
+		deck.pop_back();
+	}
+	for (int i = 0; i < deck.size(); i += 2)
+	{
+		pair<Osobnik, Osobnik> childsPair2 = toCrossing[deck[i]].crossing(CROSSINGMETHOD, &toCrossing[deck[i + 1]]);
+		dziecioki.push_back(childsPair2.first);
+		dziecioki.push_back(childsPair2.second);
+	}
+	population.clear();
+	int a = dziecioki.size();
+	for (int i = 0; i < populationSize; i++)
+	{
+		int childToAdd = rand() % a;
+		population.push_back(dziecioki[childToAdd]);
+		dziecioki.erase(dziecioki.begin() + childToAdd);
+		--a;
+	}
+	dziecioki.clear();
+}
+
+void Populacja::sukcesjaElitarna()
+{
+	vector<Osobnik> dziecioki;
+	for (int i = 0; i < population.size(); i++)
+	{
+		dziecioki.push_back(population[i]);
+	}
+
+	for (int i = 0; i < populationSize; i++)
+	{
+		dziecioki.push_back(population[i].mutate());
+		if (((double)rand() / RAND_MAX) < PI)
+			dziecioki.push_back(population[i].invert());
+	}
+	vector<Osobnik> toCrossing;
+	vector<int> deck;
+	int decker = 0;
+	for (auto ite = population.begin(); ite != population.end(); ++ite)
+	{
+		if (((double)rand() / RAND_MAX) < PK)
+		{
+			toCrossing.push_back(Osobnik(*ite));
+			deck.push_back(decker);
+			decker++;
+		}
+	}
+	shuffle(deck.begin(), deck.end(), default_random_engine(time(NULL)));
+	if (toCrossing.size() % 2 == 1)
+	{
+		//toCrossing.erase(toCrossing.begin() + deck.back());
+		deck.pop_back();
+	}
+	for (int i = 0; i < deck.size(); i += 2)
+	{
+		pair<Osobnik, Osobnik> childsPair2 = toCrossing[deck[i]].crossing(CROSSINGMETHOD, &toCrossing[deck[i + 1]]);
+		dziecioki.push_back(childsPair2.first);
+		dziecioki.push_back(childsPair2.second);
+	}
+
+	double* evalMatrix = new double[dziecioki.size()];
+	for (int i = 0; i < dziecioki.size(); i++)
+	{
+		Osobnik* ind = &dziecioki[i];
+		double* chromosomValues = ind->getChromValues(arrayOfBinAccuLen, accSize);
+
+		evalMatrix[i] = ind->eval(chromosomValues, accSize);
+		delete chromosomValues;
+	}
+	vector<pair<Osobnik*, double>> pairIndVal;
+	for (int i = 0; i < dziecioki.size(); i++)
+	{
+		pairIndVal.push_back(make_pair(&dziecioki[i], evalMatrix[i]));
+	}
+	pairIndVal = max ? sortVecDec(pairIndVal) : sortVecInc(pairIndVal);
+	population.clear();
+	for (int i = 0; i < populationSize; i++)
+	{
+		population.push_back(Osobnik(pairIndVal[i].first));
+	}
+	delete evalMatrix;
+}
+
+void Populacja::sukcesja(int i)
+{
+	switch (i)
+	{
+	case 1:
+		sukcesjaPelna();
+		break;
+	case 2:
+		sukcesjaCzesciowa();
+		break;
+	case 3:
+		sukcesjaLosowa();
+		break;
+	case 4:
+		sukcesjaElitarna();
+		break;
+	case 5:
+		break;
 	}
 }

@@ -4,9 +4,9 @@
 int _tmain(int argc, _TCHAR* argv[])
 {
 	srand(time(NULL));
-	int chosedMethod;
+	int chosedMethod, genCount, chosedSuccesMethod;
 	int accSize = 6;
-	int populationSize = 2;
+	int populationSize = 20;
 	int* acc = new int[accSize];
 	acc[0] = 1;
 	acc[1] = 2;
@@ -21,78 +21,103 @@ int _tmain(int argc, _TCHAR* argv[])
 		range[i][0] = -1.0f;
 		range[i][1] = 1.0f;
 	}
+	cout << "Podaj liczbe generacji\n";
+	cin >> genCount;
 	cout << "1-Ruletka Max 2-Ruletka Min 3-Rankingowa Max 4-Rankingowa Min 5-Turniejowa Max 6-Turniejowa Min 7-Turniejowa ze zwracaniem Max 8-Truniejowa ze zwracaniem Min" << endl;
-	//cin >> chosedMethod;
-	chosedMethod = 1;
+	cin >> chosedMethod;
+	cout << "1-Pelna 2-Czesciowa 3-Losowa 4-Elitarna\n" << endl;
+	cin >> chosedSuccesMethod;
 	cout.fill(' ');
 	Populacja pop(acc, populationSize, accSize, range);
-	cout << "________________Populacja przed wyborem____________________" << endl;
-	//pop.printInfo();
+	cout << "________________Populacja poczatkowa____________________" << endl;
+	pop.printInfo();
 	switch (chosedMethod)
 	{
 	case 1:
-		//pop.setNewPopulation(&pop.rouletteMax());
 		cout << "________________roulettMax____________________" << endl;
-		//	pop.printInfo();
-		pop.crossingTest();
-		cout << "__________________After operations__________________" << endl;
-		pop.printInfo();
+		for (int i = 0; i < genCount; i++)
+		{
+			pop.setNewPopulation(&pop.rouletteMax());
+			pop.sukcesja(chosedSuccesMethod);
+			pop.printInfo();
+			cout << "------------------------------------------------------------\n";
+		}
 		break;
 	case 2:
-		pop.setNewPopulation(&pop.rouletteMin());
 		cout << "________________roulettMin____________________" << endl;
-		pop.printInfo();
-		pop.sukcesja();
-		cout << "__________________After operations__________________" << endl;
-		pop.printInfo();
+		for (int i = 0; i < genCount; i++)
+		{
+			pop.setNewPopulation(&pop.rouletteMin());
+			pop.sukcesja(chosedSuccesMethod);
+			pop.printInfo();
+			cout << "------------------------------------------------------------\n";
+		}
 		break;
 	case 3:
-		pop.setNewPopulation(&pop.rankMax());
 		cout << "___________________rankMax_________________" << endl;
-		pop.printInfo();
-		pop.sukcesja();
-		cout << "__________________After operations__________________" << endl;
-		pop.printInfo();
+
+		for (int i = 0; i < genCount; i++)
+		{
+			pop.setNewPopulation(&pop.rankMax());
+			pop.sukcesja(chosedSuccesMethod);
+			pop.printInfo();
+			cout << "------------------------------------------------------------\n";
+		}
 		break;
 	case 4:
-		pop.setNewPopulation(&pop.rankMin());
 		cout << "__________________rankMin__________________" << endl;
-		pop.printInfo();
-		pop.sukcesja();
-		cout << "__________________After operations__________________" << endl;
-		pop.printInfo();
+
+		for (int i = 0; i < genCount; i++)
+		{
+			pop.setNewPopulation(&pop.rankMin());
+			pop.sukcesja(chosedSuccesMethod);
+			pop.printInfo();
+			cout << "------------------------------------------------------------\n";
+		}
 		break;
 	case 5:
 		cout << "________________tournamentMin____________________" << endl;
-		pop.setNewPopulation(&pop.tournamentMin(2));
-		pop.printInfo();
-		pop.sukcesja();
-		cout << "__________________After operations__________________" << endl;
-		pop.printInfo();
+
+		for (int i = 0; i < genCount; i++)
+		{
+			pop.setNewPopulation(&pop.tournamentMin(2));
+			pop.sukcesja(chosedSuccesMethod);
+			pop.printInfo();
+			cout << "------------------------------------------------------------\n";
+		}
 		break;
 	case 6:
-		pop.setNewPopulation(&pop.tournamentMax(2));
 		cout << "________________tournamentMax____________________" << endl;
-		pop.printInfo();
-		pop.sukcesja();
-		cout << "__________________After operations__________________" << endl;
-		pop.printInfo();
+
+		for (int i = 0; i < genCount; i++)
+		{
+			pop.setNewPopulation(&pop.tournamentMax(2));
+			pop.sukcesja(chosedSuccesMethod);
+			pop.printInfo();
+			cout << "------------------------------------------------------------\n";
+		}
 		break;
 	case 7:
-		pop.setNewPopulation(&pop.tournamentReturnMax(2));
 		cout << "__________________tournamentReturnMax__________________" << endl;
-		pop.printInfo();
-		pop.sukcesja();
-		cout << "__________________After operations__________________" << endl;
-		pop.printInfo();
+
+		for (int i = 0; i < genCount; i++)
+		{
+			pop.setNewPopulation(&pop.tournamentReturnMax(2));
+			pop.sukcesja(chosedSuccesMethod);
+			pop.printInfo();
+			cout << "------------------------------------------------------------\n";
+		};
 		break;
 	case 8:
 		cout << "___________________tournamentReturnMin_________________" << endl;
-		pop.setNewPopulation(&pop.tournamentReturnMin(2));
-		pop.printInfo();
-		pop.sukcesja();
-		cout << "__________________After operations__________________" << endl;
-		pop.printInfo();
+
+		for (int i = 0; i < genCount; i++)
+		{
+			pop.setNewPopulation(&pop.tournamentReturnMin(2));
+			pop.sukcesja(chosedSuccesMethod);
+			pop.printInfo();
+			cout << "------------------------------------------------------------\n";
+		}
 		break;
 	default:
 		cout << "Wrong number" << endl;

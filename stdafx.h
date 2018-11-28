@@ -5,9 +5,11 @@
 
 #pragma once
 #define C 10
-#define PM 0.1
+#define PM 0.2
 #define PI 0.1
-#define PK 1
+#define PK 0.5
+#define CROSSINGMETHOD 4
+#define CP 0.5
 #include "targetver.h"
 #include <sstream>
 #include <functional>

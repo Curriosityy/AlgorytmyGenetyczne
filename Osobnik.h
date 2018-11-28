@@ -9,6 +9,7 @@ public:
 	Osobnik(int binChromLen, float** range);
 	Osobnik(const Osobnik* osobnik);
 	Osobnik(const Osobnik& osobnik);
+	Osobnik& operator=(const Osobnik& osobnik);
 	bool* genChromosome();
 	~Osobnik();
 	bool* getChromosome();
@@ -19,9 +20,8 @@ public:
 	double eval(double* values, int size);
 	Osobnik mutate();
 	Osobnik invert();
+	pair<Osobnik, Osobnik> crossing(int type, Osobnik * osobnik);
 	pair<Osobnik, Osobnik> crossingMultipoint(int n, Osobnik * osobnik);
 	pair<Osobnik, Osobnik> evenly(Osobnik * osobnik);
-	pair<Osobnik, Osobnik> crossingOnePoint(Osobnik * osobnik);
-	pair<Osobnik, Osobnik> crossingTwoPoints(Osobnik * osobnik);
 	void printChromosome();
 };
